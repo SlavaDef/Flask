@@ -17,7 +17,8 @@ def get_exchange_rates() -> str:
 
 
 def get_exchange_rates2(base='USD'):
-    url = 'https://api.exchangerate.host/live?access_key=23142100ca89470941e805a448582c9c&currencies=USD,EUR,GBP,PLN,UAH&format=1'
+    url = ('https://api.exchangerate.host/live?access_key='
+           '23142100ca89470941e805a448582c9c&currencies=USD,EUR,GBP,PLN,UAH,JPY,TRY,TWD,AED,MXN,KRW,CNY,CAD,KZT,EGP,DKK,BRL&format=1')
 
     response = requests.get(url)
     data = response.json()
@@ -31,4 +32,4 @@ def get_exchange_rates2(base='USD'):
         raise Exception("Помилка отримання даних")
 
 
-#print(get_exchange_rates2())
+

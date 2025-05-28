@@ -1,6 +1,6 @@
-from flask import render_template, Flask
+from flask import render_template, Flask, request
 import html
-from first.exenge_convector import exchange_converter2
+from service.exenge_convector import exchange_converter2
 
 
 
@@ -9,17 +9,19 @@ from first.exenge_convector import exchange_converter2
 app = Flask(__name__)
 
 
-#@app.route('/')
-def entry_page() -> 'html':
-    results = exchange_converter2('UAH','USD',4000)
-    return render_template('home.html',
-                           the_title = 'Welcome to search4letters on the web!', results=results)
-
-
 @app.route('/')
 def entry_page() -> 'html':
-    #results = exchange_converter2('UAH','USD',4000)
     return render_template('main.html')
+
+
+
+@app.route('/res', methods = ['POST'])
+def second_page() -> 'html':
+    from_currency = str(request.form['from_currency'])
+    to_currency = str(request.form['to_currency'])
+    amount = int(request.form['amount'])
+    results = str(exchange_converter2(from_currency,to_currency,amount))
+    return render_template('main.html', results=results)
 
 
 
