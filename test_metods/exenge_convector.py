@@ -1,5 +1,5 @@
 # конвертер валют
-from service.ipi import get_exchange_rates2
+from test_metods.ipi import get_exchange_rates_test2
 
 #rates = {
   #  'USD': 1.0,
@@ -11,7 +11,8 @@ from service.ipi import get_exchange_rates2
 
  #  данні отримуємо по ip у словник
 #print("Поточні курси:", rates)  # подивимось що містить словник
-rates = get_exchange_rates2('USD')
+
+rates = get_exchange_rates_test2('USD')
 rates['USD'] = 1.0
 #print("Після додавання USD:", rates)
 

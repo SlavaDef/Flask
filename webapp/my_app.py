@@ -1,8 +1,7 @@
 from flask import render_template, Flask, request
 import html
-from service.exenge_convector import exchange_converter2
 
-
+from service.exenge_servise import exchange_converter
 
 # Створення екземпляру Flask без цього не буде працювати
 # контроллер бажано щоб знаходився в папці webapp, в іншому випадку треба додаткові налаштування бо не видно теплейту
@@ -20,7 +19,7 @@ def second_page() -> 'html':
     from_currency = str(request.form['from_currency'])
     to_currency = str(request.form['to_currency'])
     amount = int(request.form['amount'])
-    results = str(exchange_converter2(from_currency,to_currency,amount))
+    results = str(exchange_converter(from_currency,to_currency,amount))
     return render_template('main.html', results=results)
 
 

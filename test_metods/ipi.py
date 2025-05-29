@@ -2,7 +2,7 @@ import requests
 
 
 
-def get_exchange_rates() -> str:
+def get_exchange_rates_test1() -> str:
     url = "https://api.exchangerate.host/live?access_key=23142100ca89470941e805a448582c9c&currencies=USD,EUR,GBP,PLN,MXN&format=1"
     response = requests.get(url)
 
@@ -16,7 +16,7 @@ def get_exchange_rates() -> str:
         return f"Помилка запиту: {response.status_code}"
 
 
-def get_exchange_rates2(base='USD'):
+def get_exchange_rates_test2(base='USD'):
     url = ('https://api.exchangerate.host/live?access_key='
            '23142100ca89470941e805a448582c9c&currencies=USD,EUR,GBP,PLN,UAH,JPY,TRY,TWD,AED,MXN,KRW,CNY,CAD,KZT,EGP,DKK,BRL&format=1')
 
