@@ -1,5 +1,5 @@
 # конвертер валют
-from test_metods.ipi import get_exchange_rates_test2
+from temp_metods.ipi import get_exchange_rates_test2
 
 #rates = {
   #  'USD': 1.0,
