@@ -4,15 +4,14 @@ import string
 
 from flask import render_template, Flask, request, session
 import html
-
-
-
 from service.exenge_servise import exchange_converter
-from service.guess_the_number import guess_number
+from service.number_cods import find_code_by_country, find_country_by_code
 from service.parol_generator import generate_random_password
+
 
 # Створення екземпляру Flask без цього не буде працювати
 # контроллер бажано щоб знаходився в папці webapp, в іншому випадку треба додаткові налаштування бо не видно теплейту
+
 app = Flask(__name__)
 
 app.secret_key = os.urandom(24) # без ключа сесії не працюють
@@ -34,26 +33,20 @@ def second_page() -> 'html':
     return render_template('main.html', results=results)
 
 
-@app.route('/generator', methods = ['GET'])
-def generator_page() -> 'html':
-    return render_template('generator.html')
 
-
-@app.route('/generator2', methods = ['GET'])
-def generator_page2() -> 'html':
-    return render_template('generator2.html')
-
-
-
-@app.route('/generator', methods = ['POST'])
+@app.route('/generator', methods = ['POST','GET'])
 def generator() -> 'html':
+    if request.method == 'GET':
+        return render_template('generator.html')
     number = int(request.form['numb'])
     res = generate_random_password(number)
     return render_template('generator.html', res=res)
 
 
-@app.route('/generator2', methods=['POST'])
+@app.route('/generator2', methods=['POST','GET'])
 def generate_password():
+    if request.method == 'GET':
+        return render_template('generator2.html')
     length = int(request.form.get('numb', 12))
     password_type = request.form.get('passwordType', 'all')
     use_uppercase = request.form.get('uppercase') == 'on'
@@ -78,17 +71,6 @@ def generate_password():
 
     return render_template('generator2.html', res=password)
 
-
-
-#@app.route('/guess', methods = ['POST','GET'])
-def guess() -> 'html':
-    if request.method == 'GET':
-        return render_template('guess_number.html')
-    gues_one = str(request.form['gues_one'])
-    gues_two = str(request.form['gues_two'])
-    gues_three = str(request.form['gues_three'])
-    res = str(guess_number(gues_one,gues_two,gues_three))
-    return render_template('guess_number.html' , res=res)
 
 
 @app.route('/guess', methods=['GET', 'POST'])
@@ -122,6 +104,31 @@ def guess():
         result = f"Спробуйте ще раз! Залишилось спроб: {attempts_left}"
 
     return render_template('guess_number.html', res=result)
+
+
+
+@app.route('/code', methods=['GET', 'POST'])
+def country_code():
+    if request.method == 'GET':
+        return render_template('country_cods.html')
+
+    country = request.form.get('country', '').strip()
+    cod = request.form.get('cod', '').strip()
+
+    res_country = None
+    res_cod = None
+
+    if country and not cod:  # якщо введена тільки країна
+        res_country = find_code_by_country(country)
+    elif cod and not country:  # якщо введений тільки код
+        res_cod = find_country_by_code(cod)
+    else:
+        return render_template('country_cods.html',
+                               error="Будь ласка, заповніть тільки одне поле")
+
+    return render_template('country_cods.html', res_cod=res_cod, res_country=res_country)
+
+
 
 
 # запуск додатків, виклик методів без принт
