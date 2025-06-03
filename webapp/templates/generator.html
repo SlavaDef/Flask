@@ -12,7 +12,7 @@
         .b-example-divider {
             width: 100%;
             height: 3rem;
-            background-color: yellow;
+            background-color: Turquoise;
             border: solid rgba(0, 0, 0, .15);
             border-width: 1px 0;
         }
@@ -41,7 +41,18 @@
 </head>
 <body>
 
-{% for i in range(4) %}
+<div class="container my-5">
+
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb p-3 bg-body-tertiary rounded-3">
+                <li class="breadcrumb-item"><a href="/">Головна</a></li>
+                <li class="breadcrumb-item"><a href="/generator2">Parol_generator_2</a></li>
+                <li class="breadcrumb-item"><a href="/guess">Guess_the_number</a></li>
+            </ol>
+        </nav>
+    </div>
+
+{% for i in range(3) %}
     <div class="container my-5">
         <nav aria-label="breadcrumb"></nav>
     </div>
@@ -82,7 +93,7 @@
   <!-- форма закінчена -->
 
 <div class="b-example-divider ">
- <h2 class="text-center">{{res}}</h2>
+ <h2 class="text-center text-dark" >{{res}}</h2>
 <!-- при надсиланні переходимо -->
 
 </div>

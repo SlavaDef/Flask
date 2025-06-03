@@ -17,5 +17,3 @@ def generate_random_password(numb: int=12) -> str:
     except Exception as e:
         return str(e)
 
-
-print(generate_random_password())
