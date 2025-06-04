@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Convektor</title>
+    <title>Main Page</title>
 
     <!-- Підключення Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -20,59 +20,169 @@
         .breadcrumb-custom {
             padding: 1rem;
         }
-    </style>
+
+    .custom-heading {
+        font-family: 'Comic Sans MS';
+        font-weight: bold;
+    }
+
+    .feature-list {
+    padding: 20px;
+}
+
+.feature-item {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 10px;
+    padding: 20px;
+    margin-bottom: 20px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.feature-item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+.custom-heading {
+    color: #007bff;
+    margin-bottom: 15px;
+    border-bottom: 2px solid #007bff;
+    padding-bottom: 10px;
+}
+
+.feature-description {
+    padding-left: 20px;
+}
+
+.feature-description ul {
+    list-style: none;
+    padding-left: 0;
+}
+
+.feature-description li {
+    margin: 10px 0;
+    font-size: 1.1em;
+}
+
+.feature-description p {
+    font-size: 1.2em;
+    margin-bottom: 15px;
+    color: #6c757d;
+}
+
+</style>
+
+
 </head>
 <body>
     <!-- Простий breadcrumb -->
     <div class="container my-5">
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb p-3 bg-body-tertiary rounded-3">
-                <li class="breadcrumb-item"><a href="#">Головна</a></li>
-                <li class="breadcrumb-item"><a href="#">Бібліотека</a></li>
-                <li class="breadcrumb-item active" aria-current="page">Дані</li>
+                <li class="breadcrumb-item"><a href="/exchange">Currency exchange</a></li>
+                <li class="breadcrumb-item"><a href="/generator">Parol_generator</a></li>
+                <li class="breadcrumb-item"><a href="/generator2">Parol_generator_2</a></li>
+                 <li class="breadcrumb-item"><a href="/guess">Guess_the_number</a></li>
+                 <li class="breadcrumb-item"><a href="/code">Country_codes</a></li>
             </ol>
         </nav>
     </div>
+<div class="b-example-divider">
+    <div class="feature-list">
+        <!-- Currency Exchange -->
+        <div class="feature-item">
+            <h3 class="custom-heading">
+                <i class="fas fa-exchange-alt"></i> Currency Exchange
+            </h3>
+            <div class="feature-description">
+                <p>💰 Перетворіть свою валюту в будь-яку іншу!</p>
+                <ul>
+                    <li>✨ Миттєвий розрахунок</li>
+                    <li>📊 Актуальні курси валют</li>
+                    <li>🌍 Підтримка різних валют</li>
+                </ul>
+            </div>
+        </div>
 
-    <div class="b-example-divider"></div>
+        <!-- Password Generator -->
+        <div class="feature-item">
+            <h3 class="custom-heading">
+                <i class="fas fa-key"></i> Password Generator
+            </h3>
+            <div class="feature-description">
+                <p>🔐 Створіть надійний пароль за секунди!</p>
+                <ul>
+                    <li>🎯 Довжина від 8 до 128 символів</li>
+                    <li>🛡️ Максимальна безпека</li>
+                    <li>⚡ Швидка генерація</li>
+                </ul>
+            </div>
+        </div>
 
+        <!-- Password Generator 2 -->
+        <div class="feature-item">
+            <h3 class="custom-heading">
+                <i class="fas fa-shield-alt"></i> Password Generator 2.0
+            </h3>
+            <div class="feature-description">
+                <p>🎮 Розширена версія генератора паролів!</p>
+                <ul>
+                    <li>⚙️ Додаткові налаштування</li>
+                    <li>🎨 Гнучка конфігурація</li>
+                    <li>📋 Зручне копіювання</li>
+                </ul>
+            </div>
+        </div>
 
+        <!-- Guess the Number -->
+        <div class="feature-item">
+            <h3 class="custom-heading">
+                <i class="fas fa-dice"></i> Guess the Number
+            </h3>
+            <div class="feature-description">
+                <p>🎲 Випробуйте свою удачу!</p>
+                <ul>
+                    <li>🎯 3 спроби на вгадування</li>
+                    <li>🔢 Числа від 1 до 10</li>
+                    <li>🏆 Перевірте свою інтуїцію</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Country Codes -->
+        <div class="feature-item">
+            <h3 class="custom-heading">
+                <i class="fas fa-globe"></i> Country Codes
+            </h3>
+            <div class="feature-description">
+                <p>🌍 Знайдіть код країни миттєво!</p>
+                <ul>
+                    <li>📱 Пошук за телефонним кодом</li>
+                    <li>🔍 Пошук за назвою країни</li>
+                    <li>🚀 Швидкий результат</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+    <!-- FontAwesome для іконок -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+
+    {% for i in range(8) %}
     <div class="container my-5">
-    <nav aria-label="breadcrumb">
-
-<h2>From currency: <input name='from_currency' type='TEXT' width='10'> </h2>
-    <!--value те що буде написано за замовчуванням, <input - форма вводу  -->
-
-</nav>
-</div>
-
+        <nav aria-label="breadcrumb"></nav>
+    </div>
     <div class="b-example-divider"></div>
 
+ {% endfor %}
 
-    <div class="container my-5">
-    <nav aria-label="breadcrumb">
-
-<h2>To currency: <input name='to_currency' type='TEXT' width='10'> </h2>
-    <!--value те що буде написано за замовчуванням, <input - форма вводу  -->
-
-</nav>
-</div>
-
-    <div class="b-example-divider"></div>
-
-   <div class="container my-5">
-    <nav aria-label="breadcrumb">
-
-<h2>Amount: <input name='amount' type='TEXT' width='10'> </h2>
-    <!--value те що буде написано за замовчуванням, <input - форма вводу  -->
-
-</nav>
-</div>
-
-<div class="b-example-divider"></div>
 
 
     <!-- Підключення Bootstrap JavaScript -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+
+
 </body>
 </html>

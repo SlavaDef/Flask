@@ -20,17 +20,18 @@ app.secret_key = os.urandom(24) # без ключа сесії не працюю
 
 @app.route('/')
 def entry_page() -> 'html':
-    return render_template('main.html')
+    return render_template('main2.html')
 
 
-
-@app.route('/res', methods = ['POST'])
+@app.route('/exchange', methods = ['POST','GET'])
 def second_page() -> 'html':
+    if request.method == 'GET':
+        return render_template('main.html')
     from_currency = str(request.form['from_currency'])
     to_currency = str(request.form['to_currency'])
     amount = int(request.form['amount'])
     results = str(exchange_converter(from_currency,to_currency,amount))
-    return render_template('main.html', results=results)
+    return render_template('exchange_rates.html', results=results)
 
 
 

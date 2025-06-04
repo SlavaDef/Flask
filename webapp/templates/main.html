@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Convektor</title>
+    <title>{% block title %}Обмін валют{% endblock %}</title>
 
     <!-- Підключення Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -21,6 +21,8 @@
             padding: 1rem;
         }
     </style>
+    {% block additional_styles %}{% endblock %}
+
 </head>
 <body>
 
@@ -29,16 +31,17 @@
 
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb p-3 bg-body-tertiary rounded-3">
-                <li class="breadcrumb-item"><a href="/">Головна</a></li>
+                <li class="breadcrumb-item"><a href="/">Main</a></li>
+                <li class="breadcrumb-item"><a href="/exchange">Currency exchange</a></li>
                 <li class="breadcrumb-item"><a href="/generator">Parol_generator</a></li>
                 <li class="breadcrumb-item"><a href="/generator2">Parol_generator_2</a></li>
                 <li class="breadcrumb-item"><a href="/guess">Guess_the_number</a></li>
-                <li class="breadcrumb-item"><a href="/code">Код Країни</a></li>
+                <li class="breadcrumb-item"><a href="/code">Country_cods</a></li>
             </ol>
         </nav>
     </div>
 
- <form method='POST' action='/res'><!--переадрес на метод з пост і методом підрахунку -->
+ <form method='POST' action='/exchange'><!--переадрес на метод з пост і методом підрахунку -->
 
     <!-- Простий breadcrumb -->
 
@@ -134,9 +137,11 @@
     </div>
 
     <div class="b-example-divider"></div>  -->
+{% block content %}{% endblock %}
 
     <!-- Підключення Bootstrap JavaScript -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+{% block scripts %}{% endblock %}
 
 
 

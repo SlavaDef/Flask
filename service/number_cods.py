@@ -38,10 +38,3 @@ def find_code_by_country(country):
         if country in name.lower(): return str(code)  # значення до ниж регістру
     return str('Такої країни, по ходу, немає!')
 
-
-print(reading_file(sourse))
-
-print(find_country_by_code('+94'))
-
-print(find_code_by_country('австралія'))
-print(find_code_by_country('Австралія'))
