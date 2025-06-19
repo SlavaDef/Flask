@@ -1,0 +1,162 @@
+try:
+    with UseDatabase(**db_config) as cursor:
+        cursor.execute("""
+            CREATE TABLE users (
+                id INT AUTO_INCREMENT PRIMARY KEY,
+                username VARCHAR(255) NOT NULL,
+                email VARCHAR(255) NOT NULL UNIQUE,
+                password_hash VARCHAR(255) NOT NULL,
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            )
+        """)
+        print("Таблиця users створена успішно")
+except Exception as e:
+    print(f"Помилка при створенні таблиці users: {e}")
+
+
+
+with UseDatabase(**db_config) as cursor:
+
+    cursor.execute("""
+                           CREATE TABLE blogs (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT NOT NULL,
+    title VARCHAR(255) NOT NULL,
+    content TEXT NOT NULL,
+    image_path VARCHAR(255),
+    video_path VARCHAR(255),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(id)
+)""")
+
+    print("Таблица створена успішно")
+
+_____________________________________________________________________________________________________________________
+    1. Спочатку створимо функцію для збереження файлу:
+``` python
+import os
+from datetime import datetime
+from werkzeug.utils import secure_filename
+
+def save_image(image_file):
+    """Зберігає завантажене зображення та повертає шлях до нього"""
+    try:
+        # Створюємо папку для зображень якщо її немає
+        UPLOAD_FOLDER = 'static/images/blog'
+        os.makedirs(UPLOAD_FOLDER, exist_ok=True)
+
+        # Отримуємо безпечну назву файлу
+        filename = secure_filename(image_file.filename)
+
+        # Додаємо timestamp до назви файлу щоб уникнути конфліктів
+        name, ext = os.path.splitext(filename)
+        filename = f"{name}_{datetime.now().strftime('%Y%m%d_%H%M%S')}{ext}"
+
+        # Повний шлях до файлу
+        filepath = os.path.join(UPLOAD_FOLDER, filename)
+
+        # Зберігаємо файл
+        image_file.save(filepath)
+
+        # Повертаємо відносний шлях для збереження в БД
+        return f'/static/images/blog/{filename}'
+
+    except Exception as e:
+        print(f"Помилка при збереженні зображення: {e}")
+        return None
+```
+1. Тепер модифікуємо функцію створення блогу:
+``` python
+def create_blog_example(title, content, image_file=None, video_path=None):
+    """Створення блогу в базі даних"""
+    try:
+        # Зберігаємо зображення якщо воно є
+        image_path = None
+        if image_file:
+            image_path = save_image(image_file)
+            if not image_path:
+                return False, "Помилка при збереженні зображення"
+
+        with UseDatabase(**db_config_ex) as cursor:
+            cursor.execute("""
+                INSERT INTO blog_example (title, content, image_path, video_path)
+                VALUES (%s, %s, %s, %s)
+            """, (title, content, image_path, video_path))
+
+            print('Блог успішно створено')
+            return True, "Блог успішно створено"
+
+    except Exception as e:
+        print(f'Помилка: {e}')
+        return False, f"Помилка при створенні блогу: {e}"
+```
+1. Приклад використання (наприклад, у Flask):
+``` python
+from flask import request
+
+@app.route('/create_blog', methods=['POST'])
+def create_blog():
+    try:
+        title = request.form.get('title')
+        content = request.form.get('content')
+        image = request.files.get('image')  # отримуємо файл з форми
+        video_path = request.form.get('video_path')
+
+        success, message = create_blog_example(
+            title=title,
+            content=content,
+            image_file=image,
+            video_path=video_path
+        )
+
+        if success:
+            return {"status": "success", "message": message}
+        else:
+            return {"status": "error", "message": message}
+
+    except Exception as e:
+        return {"status": "error", "message": str(e)}
+```
+1. Приклад HTML форми для завантаження:
+``` html
+<form action="/create_blog" method="POST" enctype="multipart/form-data">
+    <input type="text" name="title" placeholder="Заголовок">
+    <textarea name="content" placeholder="Зміст"></textarea>
+    <input type="file" name="image" accept="image/*">
+    <input type="text" name="video_path" placeholder="Посилання на відео">
+    <button type="submit">Створити блог</button>
+</form>
+```
+Важливі моменти:
+1. В базі даних зберігається тільки шлях до файлу, не сам файл
+2. Файли зберігаються в окремій папці на сервері
+3. Використовуйте для безпечних імен файлів `secure_filename`
+4. Перевіряйте розширення файлів
+5. Обмежте розмір файлів
+
+Можна додати додаткові перевірки:
+``` python
+def save_image(image_file):
+    """Зберігає завантажене зображення з перевірками"""
+    # Перевірка розширення
+    ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
+    if not '.' in image_file.filename:
+        return None
+    ext = image_file.filename.rsplit('.', 1)[1].lower()
+    if ext not in ALLOWED_EXTENSIONS:
+        return None
+
+    # Перевірка розміру (наприклад, максимум 5MB)
+    if len(image_file.read()) > 5 * 1024 * 1024:  # 5MB
+        return None
+    image_file.seek(0)  # Повертаємо курсор на початок файлу
+
+    # Далі код збереження як вище
+    ...
+```
+Це базовий приклад, який можна розширювати додатковими функціями, такими як:
+- Зміна розміру зображень
+- Створення превью
+- Перевірка на шкідливий вміст
+- Додавання водяних знаків
+- Оптимізація зображень

@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="uk" data-bs-theme="dark">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Main Page</title>
+
+    <!-- Підключення Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+     <style>
+        .b-example-divider {
+            width: 100%;
+            height: 3rem;
+            background-color: rgba(0, 0, 0, 0.1);
+            border: solid rgba(0, 0, 0, .15);
+            border-width: 1px 0;
+        }
+
+        .breadcrumb-custom {
+            padding: 1rem;
+        }
+
+
+        .custom-heading {
+        font-family: 'Comic Sans MS';
+        font-weight: bold;
+    }
+
+    .feature-list {
+    padding: 20px;
+}
+
+.feature-item {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 10px;
+    padding: 20px;
+    margin-bottom: 20px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.feature-item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+.custom-heading {
+    color: #007bff;
+    margin-bottom: 15px;
+    border-bottom: 2px solid #007bff;
+    padding-bottom: 10px;
+}
+
+.feature-description {
+    padding-left: 20px;
+}
+
+.feature-description ul {
+    list-style: none;
+    padding-left: 0;
+}
+
+.feature-description li {
+    margin: 10px 0;
+    font-size: 1.1em;
+}
+
+.feature-description p {
+    font-size: 1.2em;
+    margin-bottom: 15px;
+    color: #6c757d;
+}
+
+        </<style>
+
+     </style>
+</head>
+<body>
+
+
+<div class="b-example-divider">
+    <div class="feature-list">
+        <!-- Currency Exchange -->
+        <div class="feature-item">
+            <h2 class="custom-heading">
+                <i class="fas fa-exchange-alt"></i> Blog
+            </h2>
+            <div class="feature-description">
+                <p>💰 Your blog</p>
+                <ul>
+                    <li>✨ Describe your day </li>
+                    <li>📊 Show photo, locations </li>
+                    <li>🌍 Another text </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+
+    {% for i in range(8) %}
+    <div class="container my-5">
+        <nav aria-label="breadcrumb"></nav>
+    </div>
+    <div class="b-example-divider"></div>
+
+ {% endfor %}
+
+
+
+    <!-- Підключення Bootstrap JavaScript -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="uk" data-bs-theme="dark">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{{ post[1] }}</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+
+ <div class="container my-5">
+
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb p-3 bg-body-tertiary rounded-3">
+                <li class="breadcrumb-item"><a href="/">Main</a></li>
+                <li class="breadcrumb-item"><a href="/blog">New_blog</a></li>
+            </ol>
+        </nav>
+    </div>
+
+    <div class="container mt-4">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="/">Main</a></li>
+                <li class="breadcrumb-item"><a href="/all_posts">All_posts</a></li>
+                <li class="breadcrumb-item active">{{ post[1] }}</li>
+            </ol>
+        </nav>
+
+        <div class="card">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-start">
+                    <h1 class="card-title">{{ post[1] }}</h1>
+                    <div>
+                      <!--  <a href="/update/{{ post[0] }}" class="btn btn-primary me-2">
+                            <i class="bi bi-pencil"></i> Редагувати
+                        </a> -->
+                         <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#editModal">
+                          <i class="bi bi-pencil-square"></i> Редагувати
+                         </button>
+
+                        <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal">
+                            <i class="bi bi-trash"></i> Видалити
+                        </button>
+                    </div>
+                </div>
+                <div class="text-muted mb-4">
+                    <small>Автор: {{ post[3] }} | Дата: {{ post[4] }}</small>
+                </div>
+                <div class="card-text">
+                    {{ post[2] }}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Модальне вікно підтвердження видалення -->
+    <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="deleteModalLabel">Підтвердження видалення</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    Ви впевнені, що хочете видалити цей пост?
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Скасувати</button>
+                    <form action="/delete/{{ post[0] }}" method="POST" style="display: inline;">
+                        <button type="submit" class="btn btn-danger">Видалити</button>
+                    </form>
+                </div>
+                 <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Скасувати</button>
+                    <form action="/update/{{ post[0] }}" method="POST" style="display: inline;">
+                        <button type="submit" class="btn btn-danger">Редагувати</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Додаємо іконки Bootstrap -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+</body>
+</html>

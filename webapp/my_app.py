@@ -2,12 +2,13 @@ import os
 import random
 import string
 
-from flask import render_template, Flask, request, session
+from flask import render_template, Flask, request, session, flash, redirect, url_for
 import html
 from service.exenge_servise import exchange_converter
-from service.number_cods import find_code_by_country, find_country_by_code
+from service.number_cods_service import find_code_by_country, find_country_by_code
 from service.parol_generator import generate_random_password
-
+from service.blog_service_db import select_data, insert_post, get_post, create_table, delete_post, insert_data, \
+    update_post
 
 # Створення екземпляру Flask без цього не буде працювати
 # контроллер бажано щоб знаходився в папці webapp, в іншому випадку треба додаткові налаштування бо не видно теплейту
@@ -130,8 +131,65 @@ def country_code():
     return render_template('country_cods.html', res_cod=res_cod, res_country=res_country)
 
 
+@app.route('/blog2')
+def blog_main_page() -> 'html':
+    return render_template('blog_main.html')
+
+
+@app.route('/blog', methods = ['POST','GET'])
+def blog_page() -> 'html':
+    if request.method == 'GET':
+        return render_template('post.html')
+    title = str(request.form['title'])
+    some_text = str(request.form['some_text'])
+    autor = str(request.form['autor'])
+    insert_post(title, some_text, autor)
+    return render_template('post.html')
+
+
+
+@app.route('/all_posts', methods = ['GET'])
+def blog_all_page() -> 'html':
+    results = select_data()
+    return render_template('all_posts.html',results=results)
+
+
+@app.route('/delete/<int:post_id>', methods = ['POST'])
+def delete_post_route(post_id):
+    try:
+        delete_post(post_id)
+        flash('Пост успішно видалено', 'success')
+    except Exception as e:
+        flash(f'Помилка при видаленні поста: {str(e)}', 'error')
+    return redirect(url_for('blog_all_page'))
+
+
+@app.route('/update/<int:post_id>', methods = ['POST'])
+def update_post_route(post_id):
+    title = str(request.form['title'])
+    some_text = str(request.form['some_text'])
+    autor = str(request.form['autor'])
+    try:
+        update_post(post_id, title, some_text, autor)
+        flash('Пост успішно відредаговано', 'success')
+    except Exception as e:
+        flash(f'Помилка при редагуванні поста: {str(e)}', 'error')
+    return redirect(url_for('blog_all_page'))
+
+
+
+@app.route('/post/<int:post_id>')
+def post_detail(post_id):
+    post = get_post(post_id)
+    if post is None:
+        return "Пост не найден", 404
+    return render_template('post_detail.html', post=post)
+
+
 
 
 # запуск додатків, виклик методів без принт
 if __name__ == '__main__':
+    #create_table()
+    #insert_data()
     app.run(debug=True)
