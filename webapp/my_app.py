@@ -148,7 +148,7 @@ def blog_page() -> 'html':
         return render_template('create_post.html')
     title = str(request.form['title'])
     some_text = str(request.form['some_text'])
-    autor = str(request.form['autor'])
+    author = str(request.form['author'])
     date = datetime.now().strftime('%d-%m-%Y %H:%M')
 
     image_path = None
@@ -159,11 +159,18 @@ def blog_page() -> 'html':
             print(f"Saved image path: {image_path}")  # Для відладки
 
     try:
-        insert_post(title, some_text, autor, date, image_path)
-        return render_template('create_post.html', results="Пост успішно створено!")
+        insert_post(title, some_text, author, date, image_path)
+        #return render_template('create_post.html', results="Пост успішно створено!")
+        flash('Пост успішно створено!', 'success')  # Додаємо flash-повідомлення
+        return redirect(url_for('blog_all_page'))  # Переадресація на метод в контроллері
+
     except Exception as e:
         print(f"Помилка при вставці: {str(e)}")
-        return render_template('create_post.html', results=f"Помилка: {str(e)}")
+        # return render_template('create_post.html', results=f"Помилка: {str(e)}")
+        flash(f"Помилка: {str(e)}", 'danger')  # Додаємо flash-повідомлення про помилку
+        return redirect(url_for('blog_all_page'))
+
+
 
 
 @app.route('/all_posts', methods = ['GET'])

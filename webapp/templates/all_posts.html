@@ -20,6 +20,16 @@
         .breadcrumb-custom {
             padding: 1rem;
         }
+
+        .card {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
     </style>
 </head>
 <body>
@@ -52,11 +62,16 @@
 
 <!-- секція карток  -->
 <div class="container mt-4">
+
     <div class="row">
+
+
+
         {% for row in results %}
         <div class="col-md-4 mb-4">
 
             <div class="card h-100">
+
                 {% if row[5] %}
                     {% set image_path = row[5].replace('\\', '/') %}  <!-- Замінюємо зворотні слеші на прямі -->
 
