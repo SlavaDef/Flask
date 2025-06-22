@@ -14,13 +14,29 @@ def create_table():
                                 title TEXT NOT NULL,
                                 content TEXT NOT NULL,
                                 author TEXT NOT NULL,
-                                date TEXT NOT NULL
+                                date TEXT NOT NULL,
+                                image_path TEXT
                             )""")
 
             print('Table created successfully')
 
     except Exception as e:
         print(f'Error creating table: {e}')
+
+
+def update_database_schema():
+    try:
+        with db as cursor:
+            # Перевіряємо чи існує стовпець image_path
+            cursor.execute("PRAGMA table_info(posts)")
+            columns = [column[1] for column in cursor.fetchall()]
+
+            if 'image_path' not in columns:
+                # Додаємо новий стовпець
+                cursor.execute("ALTER TABLE posts ADD COLUMN image_path TEXT")
+                print('Таблицю успішно оновлено')
+    except Exception as e:
+        print(f'Помилка при оновленні таблиці: {e}')
 
 
 def show_tables():
@@ -49,14 +65,14 @@ def insert_data():
                        ('Fourth Post', 'This is the fourth post', 'Jane Doe', '2023-01-04'))
 
 
-def insert_post(title, content, author, date=None):
+def insert_post(title, content, author,  date=None, image_path=None):
     if date is None:
-        date = datetime.now().strftime('%Y-%m-%d')
+        date = datetime.now().strftime('%d-%m-%Y %H:%M')
 
     try:
         with db as cursor:
-            cursor.execute("""INSERT INTO posts (title, content, author, date) VALUES (?, ?, ?, ?)""",
-                           (title, content, author, date))
+            cursor.execute("""INSERT INTO posts (title, content, author, date, image_path) VALUES (?, ?, ?, ?, ?)""",
+                           (title, content, author, date, image_path))
 
     except Exception as e:
          print(f'Error inserting post: {e}')
@@ -78,30 +94,29 @@ def delete_post(post_id):
 
 
 
-def update_post(post_id, title, content, author, date=None):
+def update_post(post_id, title, content, author, image_path=None, date=None):
 
     if date is None:
         date = datetime.now().strftime('%Y-%m-%d')
     try:
         with db as cursor:
-            cursor.execute('SELECT id FROM posts WHERE id = ?', (post_id,))
-            if not cursor.fetchone():
-                raise ValueError(f"Пост з ID {post_id} не знайдено")
+            # Якщо нове фото не завантажене, зберігаємо існуюче
+            if image_path is None:
+                cursor.execute('SELECT image_path FROM posts WHERE id = ?', (post_id,))
+                result = cursor.fetchone()
+                if result:
+                    image_path = result[0]
 
             cursor.execute('''
                UPDATE posts 
-               SET title = ?, content = ?, author = ?, date = ? 
+               SET title = ?, content = ?, author = ?, date = ?, image_path = ? 
                WHERE id = ?
-           ''', (title, content, author, date, post_id))
-            if cursor.rowcount == 0:
-                raise ValueError("Не вдалося оновити пост")
+           ''', (title, content, author, date, image_path, post_id))
+        return cursor.rowcount > 0 # Оновлення успішне
 
-            return True
-
-
-    except sqlite3.Error as e:
-
+    except Exception as e:
         raise Exception(f"Помилка бази даних: {str(e)}")
+
 
 
 
@@ -117,7 +132,7 @@ def get_post(post_id):
 
 
 
-def select_data():
+def select_all_posts():
     with db as cursor:
         cursor.execute("SELECT * FROM posts")
         posts = cursor.fetchall()
@@ -125,8 +140,17 @@ def select_data():
         #for post in posts: print(post)
 
 
+def check_table_structure():
+    with db as cursor:
+        cursor.execute("PRAGMA table_info(posts)")
+        columns = cursor.fetchall()
+        print("Структура таблиці:")
+        for column in columns:
+            print(column)
 
-if __name__ == '__main__':
-    create_table()
-    show_tables()
+
+
+#if __name__ == '__main__':
+   # create_table()
+   # show_tables()
     #select_data()

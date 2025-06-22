@@ -7,17 +7,23 @@ import html
 from service.exenge_servise import exchange_converter
 from service.number_cods_service import find_code_by_country, find_country_by_code
 from service.parol_generator import generate_random_password
-from service.blog_service_db import select_data, insert_post, get_post, create_table, delete_post, insert_data, \
-    update_post
+from service.blog_service_db import insert_post, get_post, create_table, delete_post, insert_data, \
+    update_post, select_all_posts, update_database_schema, check_table_structure
+from service.photo_saver import save_image, UPLOAD_FOLDER
+from datetime import datetime
 
 # Створення екземпляру Flask без цього не буде працювати
 # контроллер бажано щоб знаходився в папці webapp, в іншому випадку треба додаткові налаштування бо не видно теплейту
 
 app = Flask(__name__)
+app.static_folder = 'static'
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # Обмеження розміру файлу (16MB)
+
 
 app.secret_key = os.urandom(24) # без ключа сесії не працюють
 
-
+ # Debug - Image path: None
 
 @app.route('/')
 def entry_page() -> 'html':
@@ -139,18 +145,30 @@ def blog_main_page() -> 'html':
 @app.route('/blog', methods = ['POST','GET'])
 def blog_page() -> 'html':
     if request.method == 'GET':
-        return render_template('post.html')
+        return render_template('create_post.html')
     title = str(request.form['title'])
     some_text = str(request.form['some_text'])
     autor = str(request.form['autor'])
-    insert_post(title, some_text, autor)
-    return render_template('post.html')
+    date = datetime.now().strftime('%d-%m-%Y %H:%M')
 
+    image_path = None
+    if 'image' in request.files:
+        file = request.files['image']
+        if file.filename != '':
+            image_path = save_image(file)
+            print(f"Saved image path: {image_path}")  # Для відладки
+
+    try:
+        insert_post(title, some_text, autor, date, image_path)
+        return render_template('create_post.html', results="Пост успішно створено!")
+    except Exception as e:
+        print(f"Помилка при вставці: {str(e)}")
+        return render_template('create_post.html', results=f"Помилка: {str(e)}")
 
 
 @app.route('/all_posts', methods = ['GET'])
 def blog_all_page() -> 'html':
-    results = select_data()
+    results = select_all_posts()
     return render_template('all_posts.html',results=results)
 
 
@@ -164,18 +182,41 @@ def delete_post_route(post_id):
     return redirect(url_for('blog_all_page'))
 
 
-@app.route('/update/<int:post_id>', methods = ['POST'])
-def update_post_route(post_id):
-    title = str(request.form['title'])
-    some_text = str(request.form['some_text'])
-    autor = str(request.form['autor'])
-    try:
-        update_post(post_id, title, some_text, autor)
-        flash('Пост успішно відредаговано', 'success')
-    except Exception as e:
-        flash(f'Помилка при редагуванні поста: {str(e)}', 'error')
-    return redirect(url_for('blog_all_page'))
 
+@app.route('/update/<int:post_id>', methods=['GET', 'POST'])
+def update_post_route(post_id):
+    if request.method == 'POST':
+
+        try:
+            title = request.form.get('title')
+            some_text = request.form.get('some_text')
+            author = request.form.get('author')  # отримуємо значення з форми
+
+            # Обробка зображення
+            image_path = None
+            if 'image' in request.files and request.files['image'].filename != '':
+                # Якщо нове фото не завантажене, передаємо None,
+                # і функція update_post збереже існуюче
+
+                file = request.files['image']
+                image_path = save_image(file)
+
+            # Викликаємо update_post з правильним порядком аргументів
+            success = update_post(
+                post_id=post_id,
+                title=title,
+                content=some_text,
+                author=author,  # переконайтесь що це значення не None
+                image_path=image_path
+            )
+
+            if success:
+                flash('Пост успішно відредаговано', 'success')
+            return redirect(url_for('blog_all_page'))
+
+        except Exception as e:
+            flash(f'Помилка при редагуванні поста: {str(e)}', 'error')
+            return redirect(url_for('blog_all_page'))
 
 
 @app.route('/post/<int:post_id>')
@@ -190,6 +231,8 @@ def post_detail(post_id):
 
 # запуск додатків, виклик методів без принт
 if __name__ == '__main__':
+    #check_table_structure()
+    #update_database_schema()
     #create_table()
     #insert_data()
     app.run(debug=True)
